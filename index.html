@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>碩士國中教師 - 薪點與學術研究加給試算</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .point-display {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #006b8f;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .note {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🧬 碩士國中教師調薪試算器</h2>
+    
+    <div class="input-group">
+        <label for="years">請輸入您的教學年資 (0 ~ 30 年)：</label>
+        <input type="number" id="years" min="0" max="30" value="0" oninput="calculate()">
+    </div>
+
+    <div class="point-display" id="pointResult">
+        目前核定薪點：245 點 (中級距)
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>調薪時期</th>
+                <th>對應學術研究加給</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- JavaScript 渲染區域 -->
+        </tbody>
+    </table>
+
+    <div class="note">
+        * 註1：此試算假設您每年皆取得甲/乙等考績順利晉級。<br>
+        * 註2：碩士起敘為 245 薪點，滿 330 薪點時學術加給會晉升為「高級距」，最高封頂為 650 薪點。<br>
+        * 註3：本表僅顯示「學術研究加給」，未包含「本薪」，實際薪資仍需加上本薪並扣除公/健保等相關費用。
+    </div>
+</div>
+
+<script>
+    // 碩士薪點晉級軌跡 (第 0 年到第 20+ 年)
+    const pointsTrack = [
+        245, 260, 275, 290, 310, 
+        330, 350, 370, 390, 410, 
+        430, 450, 475, 490, 505, 
+        525, 550, 575, 600, 625, 650
+    ];
+
+    // 各時期學術研究加給金額 [中級距(245~310), 高級距(330以上)]
+    const bonusData = {
+        "2018年 (+3%)": { mid: 22610, high: 27080 },
+        "2022年 (+4%)": { mid: 23520, high: 28170 },
+        "2024年 (+4%)": { mid: 24470, high: 29300 },
+        "2025年 (+3%)": { mid: 25210, high: 30180 }
+    };
+
+    function calculate() {
+        let years = document.getElementById("years").value;
+        if (years === "" || years < 0) years = 0;
+        
+        // 超過 20 年一律封頂在 650 點
+        let index = years > 20 ? 20 : parseInt(years);
+        let currentPoint = pointsTrack[index];
+        let isHighTier = currentPoint >= 330;
+        let tierText = isHighTier ? "高級距" : "中級距";
+
+        // 更新薪點顯示
+        document.getElementById("pointResult").innerHTML = 
+            `當前核定薪點：<span class="highlight">${currentPoint} 點</span> (${tierText})`;
+
+        // 更新表格
+        let tbodyHTML = "";
+        for (let period in bonusData) {
+            let bonusAmount = isHighTier ? bonusData[period].high : bonusData[period].mid;
+            tbodyHTML += `
+                <tr>
+                    <td>${period}</td>
+                    <td class="highlight">${bonusAmount.toLocaleString()} 元</td>
+                </tr>
+            `;
+        }
+        document.getElementById("tableBody").innerHTML = tbodyHTML;
+    }
+
+    // 初始化執行一次
+    calculate();
+</script>
+
+</body>
+</html>
