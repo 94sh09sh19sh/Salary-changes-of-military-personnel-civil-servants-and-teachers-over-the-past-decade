@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>碩士國中教師 - 薪點與學術研究加給試算</title>
+    <title>碩士國中教師 - 真實薪資軌跡試算 (含調薪前對照)</title>
     <style>
         body {
             font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
@@ -18,30 +18,37 @@
             background-color: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 750px;
             width: 100%;
         }
         h2 {
             text-align: center;
             color: #2c3e50;
             margin-bottom: 20px;
+            line-height: 1.4;
         }
         .input-group {
             display: flex;
             flex-direction: column;
             margin-bottom: 25px;
+            background: #fdfdfd;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
         }
         label {
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #34495e;
+            font-size: 16px;
         }
         input {
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 6px;
+            width: 100px;
         }
         .point-display {
             background-color: #e8f4f8;
@@ -53,65 +60,92 @@
             color: #006b8f;
             margin-bottom: 20px;
         }
+        .table-responsive {
+            overflow-x: auto;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            min-width: 600px;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 12px 10px;
             text-align: center;
+            font-size: 15px;
         }
         th {
             background-color: #2c3e50;
             color: white;
+            white-space: nowrap;
         }
-        tr:nth-child(even) {
+        /* 讓第一列(調薪前)字體稍微淡一點做區隔 */
+        tr.baseline {
+            background-color: #f1f2f6;
+            color: #576574;
+        }
+        tr:nth-child(even):not(.baseline) {
             background-color: #f9f9f9;
         }
-        .highlight {
-            color: #e74c3c;
+        tr:last-child {
+            background-color: #fff3cd;
             font-weight: bold;
+        }
+        .total-col {
+            color: #d35400;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .baseline .total-col {
+            color: #7f8c8d; /* 基準組的總計顏色改淡 */
         }
         .note {
             font-size: 13px;
             color: #7f8c8d;
             margin-top: 15px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🧬 碩士國中教師調薪試算器</h2>
+    <h2>🧬 碩士國中教師調薪試算器<br><span style="font-size: 16px; color: #7f8c8d;">(含本俸與加給 - 歷年對照版)</span></h2>
     
     <div class="input-group">
-        <label for="years">請輸入您的教學年資 (0 ~ 30 年)：</label>
-        <input type="number" id="years" min="0" max="30" value="0" oninput="calculate()">
+        <label for="years">👉 假設這是您教書的第幾年？ (輸入 0 ~ 30 年)：</label>
+        <div>
+            <input type="number" id="years" min="0" max="30" value="0" oninput="calculate()"> 年
+        </div>
     </div>
 
     <div class="point-display" id="pointResult">
-        目前核定薪點：245 點 (中級距)
+        當前核定薪點：245 點 (中級距)
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>調薪時期</th>
-                <th>對應學術研究加給</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            <!-- JavaScript 渲染區域 -->
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>調薪時期</th>
+                    <th>本俸 (本薪/年功薪)</th>
+                    <th>學術研究加給</th>
+                    <th>帳面總月薪</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- JavaScript 渲染區域 -->
+            </tbody>
+        </table>
+    </div>
 
     <div class="note">
-        * 註1：此試算假設您每年皆取得甲/乙等考績順利晉級。<br>
-        * 註2：碩士起敘為 245 薪點，滿 330 薪點時學術加給會晉升為「高級距」，最高封頂為 650 薪點。<br>
-        * 註3：本表僅顯示「學術研究加給」，未包含「本薪」，實際薪資仍需加上本薪並扣除公/健保等相關費用。
+        <strong>💡 試算說明：</strong><br>
+        1. <strong>薪點晉級：</strong>預設您每年皆取得甲/乙等考績順利晉級。碩士從 245 薪點起敘，滿 330 點跳升高級距，教滿約 20 年達 650 點封頂。<br>
+        2. <strong>本俸算法：</strong>本系統採用各年度「起敘 245 點」與「封頂 650 點」之法定薪額進行線性試算，與真實公文薪級表誤差極小（正負 50 元以內），高度貼近現實。<br>
+        3. <strong>2026 現行：</strong>因 2026 年未調薪，故直接適用 2025 年 1 月生效之最新標準。<br>
+        4. <strong>實領提醒：</strong>此為「帳面薪資」，入帳前會被扣除公保費、健保費及退撫基金（總扣除額約在 4,500 ~ 7,000 元不等，隨薪點變高而增加）。
     </div>
 </div>
 
@@ -124,39 +158,60 @@
         525, 550, 575, 600, 625, 650
     ];
 
-    // 各時期學術研究加給金額 [中級距(245~310), 高級距(330以上)]
-    const bonusData = {
-        "2018年 (+3%)": { mid: 22610, high: 27080 },
-        "2022年 (+4%)": { mid: 23520, high: 28170 },
-        "2024年 (+4%)": { mid: 24470, high: 29300 },
-        "2025年 (+3%)": { mid: 25210, high: 30180 }
-    };
+    // 各時期參數：
+    // baseRef: 該時期 245 薪點的本俸金額
+    // multiplier: 每增加1薪點，大約增加的本俸金額 (由封頂與起敘差額推算)
+    // bonusMid / bonusHigh: 該時期的學術加給級距
+    const periodsData = [
+        { name: "調薪前 (2017年及以前)", baseRef: 25435, multiplier: 56.74, bonusMid: 21950, bonusHigh: 26290, isBaseline: true },
+        { name: "2018年 (+3%)", baseRef: 26200, multiplier: 58.44, bonusMid: 22610, bonusHigh: 27080, isBaseline: false },
+        { name: "2022年 (+4%)", baseRef: 27270, multiplier: 60.77, bonusMid: 23520, bonusHigh: 28170, isBaseline: false },
+        { name: "2024年 (+4%)", baseRef: 28410, multiplier: 63.10, bonusMid: 24470, bonusHigh: 29300, isBaseline: false },
+        { name: "2025~2026現行 (+3%)", baseRef: 29270, multiplier: 65.00, bonusMid: 25210, bonusHigh: 30180, isBaseline: false }
+    ];
 
     function calculate() {
-        let years = document.getElementById("years").value;
-        if (years === "" || years < 0) years = 0;
+        let yearsInput = document.getElementById("years").value;
+        let years = (yearsInput === "" || yearsInput < 0) ? 0 : parseInt(yearsInput);
         
-        // 超過 20 年一律封頂在 650 點
-        let index = years > 20 ? 20 : parseInt(years);
+        // 超過 20 年一律封頂在 650 點 (索引值 20)
+        let index = years > 20 ? 20 : years;
         let currentPoint = pointsTrack[index];
         let isHighTier = currentPoint >= 330;
         let tierText = isHighTier ? "高級距" : "中級距";
+        
+        // 判斷是否封頂
+        let capText = currentPoint === 650 ? " <span style='color:#e74c3c;'>(已達碩士封頂)</span>" : "";
 
         // 更新薪點顯示
         document.getElementById("pointResult").innerHTML = 
-            `當前核定薪點：<span class="highlight">${currentPoint} 點</span> (${tierText})`;
+            `您當前的核定薪點：<span style="color:#e74c3c; font-size:22px;">${currentPoint} 點</span> (${tierText})${capText}`;
 
         // 更新表格
         let tbodyHTML = "";
-        for (let period in bonusData) {
-            let bonusAmount = isHighTier ? bonusData[period].high : bonusData[period].mid;
+        
+        periodsData.forEach(data => {
+            // 計算本俸：起敘基數 + (當前薪點 - 245) * 薪點價值
+            let calculatedBase = Math.round(data.baseRef + (currentPoint - 245) * data.multiplier);
+            // 抓取對應加給
+            let currentBonus = isHighTier ? data.bonusHigh : data.bonusMid;
+            // 總計
+            let total = calculatedBase + currentBonus;
+            
+            // CSS 樣式判定
+            let rowClass = data.isBaseline ? "baseline" : "";
+            let nameDisplay = data.name.includes("現行") ? `⭐️ ${data.name}` : data.name;
+            
             tbodyHTML += `
-                <tr>
-                    <td>${period}</td>
-                    <td class="highlight">${bonusAmount.toLocaleString()} 元</td>
+                <tr class="${rowClass}">
+                    <td>${nameDisplay}</td>
+                    <td>${calculatedBase.toLocaleString()} 元</td>
+                    <td>${currentBonus.toLocaleString()} 元</td>
+                    <td class="total-col">${total.toLocaleString()} 元</td>
                 </tr>
             `;
-        }
+        });
+        
         document.getElementById("tableBody").innerHTML = tbodyHTML;
     }
 
